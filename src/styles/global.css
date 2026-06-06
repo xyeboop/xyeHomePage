@@ -1,0 +1,407 @@
+/* ================================================================
+   Global CSS — 全局样式、CSS 变量、Reset、图标字体、通用组件类、Keyframes
+   来源：旧项目 variable.less / common.less / icon.less / page.less / layout.less
+   ================================================================ */
+
+/* ====== 1. CSS 变量 ====== */
+:root {
+  --color-link: #5f5f5f;
+  --color-link-hover: #5f5f5f;
+  --color-enter: #fff;
+  --color-title: #fff;
+  --color-content: #222325;
+  --font-alt: 200 6vw/1 -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Helvetica Neue', 'Microsoft Yahei', sans-serif;
+
+  /* AI 主题色 */
+  --ai-cyan: #00f0ff;
+  --ai-blue: #0080ff;
+  --ai-purple: #7b2fff;
+  --ai-dark: #0a0a1a;
+  --ai-user-green: #00ff41;
+  --ai-glass-bg: rgba(10, 10, 30, 0.75);
+  --ai-glass-border: rgba(0, 240, 255, 0.15);
+}
+
+/* ====== 2. Reset + 基础样式 ====== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: none;
+}
+
+html {
+  font-size: 20px;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  background: #0a0a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    'Microsoft Yahei', sans-serif;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  cursor: url('https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/default.cur'), auto;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  border: 0;
+  vertical-align: middle;
+}
+
+img,
+a {
+  cursor: url('https://cdn.jsdelivr.net/gh/SimonAKing/images/blog/pointer.cur'), auto;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-link);
+  outline: none;
+}
+
+/* ====== 3. 图标字体 (iconfont) ====== */
+@font-face {
+  font-family: 'iconfont';
+  font-display: auto;
+  src: url('//at.alicdn.com/t/font_1056856_p9cyrhslv5j.eot?t=1551327438450');
+  src: url('//at.alicdn.com/t/font_1056856_p9cyrhslv5j.eot?t=1551327438450#iefix')
+      format('embedded-opentype'),
+    url('data:application/x-font-woff2;charset=utf-8;base64,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')
+      format('woff2'),
+    url('//at.alicdn.com/t/font_1056856_p9cyrhslv5j.woff?t=1551327438450')
+      format('woff'),
+    url('//at.alicdn.com/t/font_1056856_p9cyrhslv5j.ttf?t=1551327438450')
+      format('truetype'),
+    url('//at.alicdn.com/t/font_1056856_p9cyrhslv5j.svg?t=1551327438450#iconfont')
+      format('svg');
+}
+
+.icon {
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0 auto;
+  fill: currentColor;
+  font-family: 'iconfont' !important;
+  font-size: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-github:before  { content: '\e7ab'; }
+.icon-twitter:before  { content: '\ecc1'; }
+.icon-other:before    { content: '\e631'; }
+.icon-email:before    { content: '\e62d'; }
+.icon-bokeyuan:before { content: '\e603'; }
+.icon-xiaolian:before { content: '\e650'; }
+.icon-wechat:before   { content: '\f23b'; }
+
+/* ====== 4. 通用布局和跨组件共享的样式类 ====== */
+
+/* --- fade 进入动画 --- */
+.fade {
+  opacity: 0;
+  transition: all 1s;
+  transform: translateY(200px);
+}
+.fade.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- 页面全屏容器 --- */
+.content-inner {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.wrap {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* --- AI 对话容器 --- */
+.ai-chat-container {
+  max-width: 680px;
+  width: 90%;
+  margin: 0 auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .ai-chat-container {
+    width: 95%;
+    gap: 1rem;
+  }
+}
+@media screen and (max-width: 50em) {
+  .ai-chat-container {
+    max-width: 100%;
+    width: 92%;
+    gap: 0.8rem;
+  }
+}
+
+/* --- BorderGlow 消息内边距 --- */
+.chat-message-inner {
+  padding: 1.2rem 1.4rem;
+}
+
+@media screen and (max-width: 50em) {
+  .chat-message-inner {
+    padding: 0.8rem 1rem;
+  }
+}
+
+/* --- Prompt 标签 --- */
+.prompt-label {
+  font-family: "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-right: 0.6rem;
+  letter-spacing: 0.5px;
+}
+
+.user-message .prompt-label {
+  color: var(--ai-user-green);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+}
+
+.ai-message .prompt-label {
+  color: var(--ai-cyan);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+}
+
+@media screen and (max-width: 50em) {
+  .prompt-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* --- 打字文本 --- */
+.typing-text {
+  font-family: "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.typing-text::after {
+  content: '▊';
+  display: inline;
+  color: var(--ai-user-green);
+  animation: cursor-blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+.typing-text.done::after {
+  display: none;
+}
+
+@media screen and (max-width: 50em) {
+  .typing-text {
+    font-size: 0.75rem;
+  }
+}
+
+/* --- AI 响应区域 --- */
+.ai-response {
+  min-height: 1.5rem;
+}
+
+/* --- AI 思考动画点 --- */
+.ai-thinking {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0.4rem 0;
+}
+
+.ai-thinking .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ai-cyan);
+  animation: dot-bounce 1.4s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+.ai-thinking .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ai-thinking .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.ai-thinking.hidden {
+  display: none;
+}
+
+@media screen and (max-width: 50em) {
+  .ai-thinking .dot {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+/* --- 占位内容（About / Projects 共用） --- */
+.placeholder-content {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: placeholder-float 3s ease-in-out infinite;
+}
+
+.placeholder-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    'Microsoft Yahei', sans-serif;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+@media screen and (max-width: 50em) {
+  .placeholder-icon {
+    font-size: 2rem;
+  }
+  .placeholder-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* --- 返回按钮 --- */
+.page-back {
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  white-space: pre;
+  pointer-events: auto;
+  transition: all 0.4s;
+  z-index: 999;
+  position: relative;
+  cursor: pointer;
+  margin-top: 2rem;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.8), transparent);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-ai 2s linear infinite;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.page-back:hover {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media screen and (max-width: 50em) {
+  .page-back {
+    font-size: 0.65rem;
+    margin-top: 1.5rem;
+    letter-spacing: 2px;
+  }
+}
+
+/* ====== 5. 全局 Keyframes ====== */
+
+@keyframes shimmer-ai {
+  0% {
+    background-position: 200% center;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+  }
+  100% {
+    background-position: -200% center;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40%           { transform: translateY(-8px); opacity: 1; }
+}
+
+@keyframes placeholder-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes play-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50%      { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes ai-glow {
+  from {
+    text-shadow:
+      0 0 20px rgba(0, 240, 255, 0.4),
+      0 0 60px rgba(0, 128, 255, 0.2),
+      0 0 1px rgba(255, 255, 255, 0.5);
+  }
+  to {
+    text-shadow:
+      0 0 30px rgba(0, 240, 255, 0.6),
+      0 0 80px rgba(123, 47, 255, 0.3),
+      0 0 2px rgba(255, 255, 255, 0.7);
+  }
+}
+
+@keyframes arrow-movement {
+  0%   { opacity: 0; top: 92%; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes letter-glow {
+  0%   { opacity: 0; text-shadow: 0 0 1px rgba(255, 255, 255, 0.1); }
+  66%  { opacity: 1; text-shadow: 0 0 20px rgba(0, 240, 255, 0.9); }
+  77%  { opacity: 1; }
+  100% { opacity: 0.7; text-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
+}
