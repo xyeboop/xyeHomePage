@@ -60,11 +60,128 @@
 		"back": "← Back"
 	},
 	"about": {
-		"aiPrompt": "Tell me about YuTing Ye's background.",
-		"placeholder": "功能开发中，敬请期待..."
+		"back": "← Back",
+		"photoImage": "/cuteme.gif",
+		"photoAlt": "My pixel character",
+		"terminal": {
+			"title": "about — YuTing Ye",
+			"user": "yyt@portfolio",
+			"introLines": [
+				"Hello! I'm YuTing Ye — a Product Manager.",
+				"",
+				"Available commands:",
+				"  whoami         — who am I",
+				"  focus          — my core focus",
+				"  about          — about me",
+				"  traits         — personal traits",
+				"  current_status — what I'm doing now",
+				"  all            — show everything",
+				"",
+				"Type a command to learn more. Try 'all' for a full overview →",
+				""
+			],
+			"commands": {
+				"whoami": "叶钰婷 / 产品经理 / 同济大学",
+				"focus": "效率 × 逻辑 × 前沿探索",
+				"about": "我关注交易产品、本地生活增长和商业化产品，\n也持续探索 AI 如何提升工作、学习与生活效率。\n\n作为好奇心驱动型选手，我长期保持跨领域探索，\n并习惯从多元生活中捕捉用户洞察。",
+				"traits": "[数据驱动] [逻辑性强] [善于沟通] [对AI保持好奇]",
+				"current_status": "目前就读于同济大学设计专业；\n有交易产品、本地生活用户增长产品、商业化产品经验；\n不断探索AI对工作、生活、学习的帮助与提效。"
+			},
+			"unknownCmd": "Unknown command. Available: whoami, focus, about, traits, current_status, all"
+		}
 	},
 	"projects": {
-		"aiPrompt": "What projects has YuTing Ye worked on?",
-		"placeholder": "功能开发中，敬请期待..."
+		"back": "← Back",
+		"sections": [
+			{
+				"id": "internship",
+				"title": "Internship",
+				"subtitle": "实习经历",
+				"items": [
+					{
+						"order": "01",
+						"company": "SHEIN",
+						"role": "交易策略产品",
+						"description": "负责商品控价策略和人审提效，通过聚合、工作台重构与无同款场景优化，降本增效。",
+						"metrics": [
+							{ "value": "-20%", "label": "审核量级" },
+							{ "value": "+16%", "label": "审核效率" }
+						],
+						"logo": "/shein.png",
+						"logoWidth": 64,
+						"logoHeight": 20,
+						"logoTop": 12,
+						"logoRight": 22
+					},
+					{
+						"order": "02",
+						"company": "京东",
+						"role": "本地生活用增产品",
+						"description": "负责洗衣洗鞋的交易与履约链路设计，制定动态权益发放策略，拉新与平衡门店产能。",
+						"metrics": [
+							{ "value": "+26.4w", "label": "日均新用户" },
+							{ "value": "2.05", "label": "拉新ROI" }
+						],
+						"logo": "/jd.png",
+						"logoWidth": 27,
+						"logoHeight": 27,
+						"logoTop": 12,
+						"logoRight": 22
+					},
+					{
+						"order": "03",
+						"company": "携程",
+						"role": "商业化广告产品",
+						"description": "负责酒店商户广告增长方案设计，通过优惠券、打标、返佣，提升商户费率和广告收入。",
+						"metrics": [
+							{ "value": "+8.19%", "label": "平均费率" },
+							{ "value": "+16.31%", "label": "广告收入" }
+						],
+						"logo": "/ctrip.png",
+						"logoWidth": 50,
+						"logoHeight": 50,
+						"logoTop": 0,
+						"logoRight": 22
+					}
+				]
+			},
+			{
+				"id": "campus",
+				"title": "Campus",
+				"subtitle": "校园经历",
+				"items": [
+					{
+						"order": "01",
+						"company": "COPLAY玩名堂",
+						"role": "AI桌游社交产品设计",
+						"description": "搭建多Agent，规划多模态交互，并生成AI动画，探索“AI+线下娱乐”的内容产品模式。",
+						"metrics": [
+							{ "value": "4个", "label": "智能体角色" },
+							{ "value": "1套", "label": "生态系统" }
+						]
+					},
+					{
+						"order": "02",
+						"company": "大创项目",
+						"role": "团队创造力任务的沟通工具",
+						"description": "担任组长，获得互联网+，一作发表A类会议并汇报。",
+						"metrics": [
+							{ "value": "28人", "label": "专家访谈" },
+							{ "value": "2次", "label": "产品迭代" }
+						]
+					},
+					{
+						"order": "03",
+						"company": "抖音探店达人",
+						"role": "叶小花玩上海",
+						"description": "运营抖音本地生活探店账号，从选题策划到数据复盘完整负责内容增长。",
+						"metrics": [
+							{ "value": "141w", "label": "最高视频播放量" },
+							{ "value": "6000+", "label": "首月粉丝数" }
+						]
+					}
+				]
+			}
+		]
 	}
 }

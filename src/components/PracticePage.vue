@@ -38,7 +38,6 @@ onMounted(async () => {
   showDetails.value = true
   await nextTick()
 
-  // 动画序列展示内容
   const elements = [
     titleEl.value,
     descEl.value,
@@ -69,6 +68,9 @@ function setupVideoPlayback() {
   const playIcon = playIconEl.value
   const placeholderText = placeholderTextEl.value
   if (!video || !placeholder) return
+
+  // 预加载视频
+  video.load()
 
   placeholder.style.cursor = 'pointer'
   const clickHandler = () => {
@@ -102,55 +104,53 @@ function setupVideoPlayback() {
 
 <template>
   <div class="content-practice">
-    <div class="content-inner">
-      <div ref="wrapRef" class="wrap fade">
-        <div class="ai-chat-container">
-          <BorderGlow background-color="#0d1117" :border-radius="12" :glow-radius="20" :edge-sensitivity="34" glow-color="185 80 50" :glow-intensity="1" :cone-spread="25" :colors="['#00f0ff', '#0080ff', '#9b30ff']" :fill-opacity="0.4">
-            <div class="chat-message-inner user-message">
-              <span class="prompt-label">&gt; User:</span>
-              <span ref="userTextRef" class="typing-text" :class="{ done: cursorDone }">&nbsp;</span>
+    <div ref="wrapRef" class="practice-wrap fade">
+      <div class="ai-chat-container">
+        <BorderGlow background-color="#0d1117" :border-radius="12" :glow-radius="20" :edge-sensitivity="34" glow-color="185 80 50" :glow-intensity="1" :cone-spread="25" :colors="['#00f0ff', '#0080ff', '#9b30ff']" :fill-opacity="0.4">
+          <div class="chat-message-inner user-message">
+            <span class="prompt-label">&gt; User:</span>
+            <span ref="userTextRef" class="typing-text" :class="{ done: cursorDone }">&nbsp;</span>
+          </div>
+        </BorderGlow>
+
+        <BorderGlow background-color="#0d1117" :border-radius="12" :glow-radius="20" :edge-sensitivity="34" glow-color="185 80 50" :glow-intensity="1" :cone-spread="25" :colors="['#00f0ff', '#0080ff', '#9b30ff']" :fill-opacity="0.4">
+          <div class="chat-message-inner ai-message">
+          <span class="prompt-label">&gt; AI:</span>
+          <div class="ai-response">
+            <div ref="thinkingEl" class="ai-thinking">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
             </div>
-          </BorderGlow>
 
-          <BorderGlow background-color="#0d1117" :border-radius="12" :glow-radius="20" :edge-sensitivity="34" glow-color="185 80 50" :glow-intensity="1" :cone-spread="25" :colors="['#00f0ff', '#0080ff', '#9b30ff']" :fill-opacity="0.4">
-            <div class="chat-message-inner ai-message">
-            <span class="prompt-label">&gt; AI:</span>
-            <div class="ai-response">
-              <div ref="thinkingEl" class="ai-thinking">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-              </div>
-
-              <div v-show="showDetails" ref="detailsEl" class="practice-details" style="display:none">
-                <h2 ref="titleEl" class="practice-title">{{ practiceData.aiTitle }}</h2>
-                <p ref="descEl" class="practice-desc">{{ practiceData.aiDesc }}</p>
-                <div ref="videoEl" class="video-wrapper">
-                  <video
-                    ref="videoRef"
-                    class="video-player"
-                    preload="metadata"
-                    :poster="practiceData.videoPoster"
-                    disablepictureinpicture
-                    controlslist="nodownload nofullscreen"
-                  >
-                    <source :src="practiceData.videoPlaceholder" type="video/mp4" />
-                  </video>
-                  <div ref="placeholderEl" class="video-placeholder">
-                    <span ref="playIconEl" class="play-icon">▶</span>
-                    <span ref="placeholderTextEl" class="placeholder-text">点击播放产品动画</span>
-                  </div>
+            <div v-show="showDetails" ref="detailsEl" class="practice-details" style="display:none">
+              <h2 ref="titleEl" class="practice-title">{{ practiceData.aiTitle }}</h2>
+              <p ref="descEl" class="practice-desc">{{ practiceData.aiDesc }}</p>
+              <div ref="videoEl" class="video-wrapper">
+                <video
+                  ref="videoRef"
+                  class="video-player"
+                  preload="none"
+                  controls
+                  playsinline
+                  :poster="practiceData.videoPoster"
+                >
+                  <source :src="practiceData.videoPlaceholder" type="video/mp4" />
+                </video>
+                <div ref="placeholderEl" class="video-placeholder">
+                  <span ref="playIconEl" class="play-icon">▶</span>
+                  <span ref="placeholderTextEl" class="placeholder-text">点击播放产品动画</span>
                 </div>
               </div>
             </div>
           </div>
-        </BorderGlow>
         </div>
-
-        <a ref="backBtn" class="page-back" style="opacity:0;pointer-events:none" @click="$emit('back')">
-          {{ practiceData.back }}
-        </a>
+      </BorderGlow>
       </div>
+
+      <a ref="backBtn" class="page-back" style="opacity:0;pointer-events:none" @click="$emit('back')">
+        {{ practiceData.back }}
+      </a>
     </div>
   </div>
 </template>
@@ -164,6 +164,17 @@ function setupVideoPlayback() {
   height: 100vh;
   z-index: 200;
   background: #060606;
+  overflow-y: auto;
+}
+
+.practice-wrap {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
 }
 
 .practice-details {
@@ -211,7 +222,8 @@ function setupVideoPlayback() {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
 }
 
 .video-placeholder {
@@ -225,8 +237,6 @@ function setupVideoPlayback() {
   align-items: center;
   justify-content: center;
   background: rgba(6, 6, 6, 0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
@@ -253,6 +263,7 @@ function setupVideoPlayback() {
 @media screen and (max-width: 768px) {
   .practice-title { font-size: 1.1rem; }
 }
+
 @media screen and (max-width: 50em) {
   .practice-title { font-size: 0.9rem; }
   .practice-desc  { font-size: 0.75rem; }
