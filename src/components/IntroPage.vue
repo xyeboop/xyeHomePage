@@ -20,6 +20,139 @@ const titleElRef = ref<HTMLElement>()
 const subtitleElRef = ref<HTMLElement>()
 const enterBtn = ref<HTMLElement>()
 
+// SVG 路径（正向/反向变形用）
+const ORIGINAL_PATH =
+  'M -44,-50 C -52.71,28.52 15.86,8.186 184,14.69 383.3,22.39 462.5,12.58 638,14 835.5,15.6 987,6.4 1194,13.86 1661,30.68 1652,-36.74 1582,-140.1 1512,-243.5 15.88,-589.5 -44,-50 Z'
+const TARGET_PATH =
+  'M -44,-50 C -137.1,117.4 67.86,445.5 236,452 435.3,459.7 500.5,242.6 676,244 873.5,245.6 957,522.4 1154,594 1593,753.7 1793,226.3 1582,-126 1371,-478.3 219.8,-524.2 -44,-50 Z'
+
+/**
+ * 退出动画：CSS class 驱动，复刻原版 switchPage()
+ * 1. intro 页面上滑 200vh（CSS transition）
+ * 2. SVG 波浪弹性拉伸（CSS keyframe）
+ * 3. SVG 路径变形（CSS keyframe，仅 Chromium 有效，FF/Safari 降级跳过）
+ * 全部并行 1100ms
+ */
+async function animateOut(): Promise<void> {
+  const introEl = document.querySelector('.content-intro') as HTMLElement | null
+  const shapeEl = document.querySelector('.shape') as SVGElement | null
+  const pathEl = shapeEl?.querySelector('path') as SVGPathElement | null
+
+  if (!introEl || !shapeEl || !pathEl) return
+
+  // 先清理可能残存的 Web Animation fill
+  ;[introEl, shapeEl, pathEl].forEach((el) =>
+    el.getAnimations().forEach((a) => a.cancel()),
+  )
+
+  // 触发 CSS 动画
+  introEl.classList.add('animate-out')
+  shapeEl.classList.add('animate-morph')
+
+  await new Promise((resolve) => setTimeout(resolve, 1100))
+}
+
+/**
+ * 返回动画：反向帷幔效果
+ * 从 translateY(-200vh) 滑回 0，SVG 形状同步回弹
+ */
+async function animateIn(): Promise<void> {
+  const introEl = document.querySelector('.content-intro') as HTMLElement | null
+  const shapeEl = document.querySelector('.shape') as SVGElement | null
+  const pathEl = shapeEl?.querySelector('path') as SVGPathElement | null
+
+  if (!introEl || !shapeEl || !pathEl) return
+
+  // 清理残存动画
+  ;[introEl, shapeEl, pathEl].forEach((el) =>
+    el.getAnimations().forEach((a) => a.cancel()),
+  )
+
+  shapeEl.style.transformOrigin = '50% 0%'
+
+  // 反向滑入：从 -200vh 回到 0
+  const slideAnim = introEl.animate(
+    [
+      { transform: 'translateY(-200vh)' },
+      { transform: 'translateY(0)' },
+    ],
+    {
+      duration: 1100,
+      easing: 'cubic-bezier(0.45, 0.05, 0.55, 0.95)',
+      fill: 'forwards',
+    },
+  )
+
+  // SVG 形状反向回弹
+  const shapeAnim = shapeEl.animate(
+    [
+      { transform: 'scaleY(1)' },
+      { transform: 'scaleY(1)' },
+    ],
+    {
+      duration: 1100,
+      easing: 'cubic-bezier(0, 0.55, 0.45, 1)',
+      fill: 'forwards',
+    },
+  )
+
+  // 路径反向变形
+  let pathAnim: Animation | null = null
+  try {
+    pathAnim = pathEl.animate(
+      { d: [TARGET_PATH, ORIGINAL_PATH] },
+      {
+        duration: 1100,
+        easing: 'cubic-bezier(0, 0.55, 0.45, 1)',
+        fill: 'forwards',
+      },
+    )
+  } catch {
+    /* d 动画不支持则静默跳过 */
+  }
+
+  const promises: Promise<any>[] = [slideAnim.finished, shapeAnim.finished]
+  if (pathAnim) promises.push(pathAnim.finished)
+  await Promise.all(promises)
+
+  // 收尾：移除 CSS 动画 class，取消 WAAPI fill
+  introEl.classList.remove('animate-out')
+  shapeEl.classList.remove('animate-morph')
+  slideAnim.cancel()
+  shapeAnim.cancel()
+  pathAnim?.cancel()
+  introEl.style.transform = ''
+  shapeEl.style.transform = ''
+
+  hasEntered = false
+}
+
+/** 回到首页时重置位置和形状 */
+function resetPosition() {
+  const introEl = document.querySelector('.content-intro') as HTMLElement | null
+  const shapeEl = document.querySelector('.shape') as SVGElement | null
+  const pathEl = shapeEl?.querySelector('path') as SVGPathElement | null
+
+  // 取消所有 Web Animation fill（关键：fill 优先级高于 inline style）
+  ;[introEl, shapeEl, pathEl].forEach((el) => el?.getAnimations().forEach((a) => a.cancel()))
+
+  // 移除动画 class（先禁用 transition 防止回弹动画）
+  if (introEl) {
+    introEl.style.transition = 'none'
+    introEl.classList.remove('animate-out')
+    void introEl.offsetHeight // 强制回流，确保 transition:none 生效
+    introEl.style.transition = ''
+  }
+  if (shapeEl) {
+    shapeEl.classList.remove('animate-morph')
+  }
+
+  // 重置进入锁，允许再次翻页
+  hasEntered = false
+}
+
+defineExpose({ animateOut, animateIn, resetPosition })
+
 // --- 状态 ---
 const titleVisible = ref(false)
 const subtitleVisible = ref(false)
@@ -247,7 +380,7 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 200vh;
   z-index: 100;
   overflow: hidden;
 }
@@ -276,20 +409,34 @@ onUnmounted(() => {
 .content-title {
   font-family: "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
   font-size: 3.5rem;
-  font-weight: 300;
-  color: var(--color-title);
+  font-weight: 400;
+  letter-spacing: 0.12em;
   line-height: 1.2;
   margin: 0.3em 0 0.2em 0;
+  color: transparent;
+  background: linear-gradient(
+    135deg,
+    #00f0ff 0%,
+    #e0f0ff 35%,
+    #9b30ff 65%,
+    #00f0ff 100%
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
   text-shadow:
-    0 0 20px rgba(0, 240, 255, 0.4),
-    0 0 60px rgba(0, 128, 255, 0.2),
-    0 0 1px rgba(255, 255, 255, 0.5);
-  animation: ai-glow 3s ease-in-out infinite alternate;
+    0 0 0 #fff,
+    0 0 10px rgba(0, 240, 255, 0.8),
+    0 0 30px rgba(0, 128, 255, 0.5),
+    0 0 60px rgba(155, 48, 255, 0.35);
+  animation: ai-glow 3s ease-in-out infinite alternate,
+             title-shift 6s ease-in-out infinite;
 }
 
 @media screen and (max-width: 768px) {
   .content-title {
     font-size: 2.2rem;
+    letter-spacing: 0.06em;
   }
 }
 @media screen and (max-width: 50em) {
@@ -408,5 +555,46 @@ onUnmounted(() => {
 
 .shape path {
   fill: #151515;
+}
+</style>
+
+<!-- 翻页帷幔动画（非 scoped，JS 动态添加 class 需要全局样式匹配） -->
+<style>
+/* ====== Intro → Main 翻页动画 ====== */
+
+/* 1. 页面上滑 */
+.content-intro.animate-out {
+  transform: translateY(-200vh);
+  transition: transform 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* 2. SVG 波浪弹性拉伸 */
+.shape {
+  transform-origin: 50% 0%;
+}
+
+.shape.animate-morph {
+  animation: shape-stretch 1.1s ease-in-out forwards;
+}
+
+@keyframes shape-stretch {
+  0%   { transform: scaleY(1); }
+  20%  { transform: scaleY(0.8); }
+  50%  { transform: scaleY(1.8); }
+  100% { transform: scaleY(1); }
+}
+
+/* 3. SVG 路径变形（Chromium 有效，不支持则静默跳过） */
+.shape.animate-morph path {
+  animation: path-morph 1.1s cubic-bezier(0, 0.55, 0.45, 1) forwards;
+}
+
+@keyframes path-morph {
+  from {
+    d: path("M -44,-50 C -52.71,28.52 15.86,8.186 184,14.69 383.3,22.39 462.5,12.58 638,14 835.5,15.6 987,6.4 1194,13.86 1661,30.68 1652,-36.74 1582,-140.1 1512,-243.5 15.88,-589.5 -44,-50 Z");
+  }
+  to {
+    d: path("M -44,-50 C -137.1,117.4 67.86,445.5 236,452 435.3,459.7 500.5,242.6 676,244 873.5,245.6 957,522.4 1154,594 1593,753.7 1793,226.3 1582,-126 1371,-478.3 219.8,-524.2 -44,-50 Z");
+  }
 }
 </style>
