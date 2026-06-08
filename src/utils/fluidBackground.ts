@@ -921,14 +921,21 @@ export class FluidBackground {
 
   private onMouseUp = () => { this.pointers[0].down = false }
 
+  private isCanvasHidden(): boolean {
+    if (!this.canvas) return true
+    // Check if any ancestor has display:none (v-show on parent component)
+    if (this.canvas.offsetParent === null && getComputedStyle(this.canvas).display === 'none') return true
+    // Also check visible dimensions — zero-size means hidden
+    const rect = this.canvas.getBoundingClientRect()
+    return rect.width === 0 && rect.height === 0
+  }
+
   private onTouchStart = (e: TouchEvent) => {
-    // Skip if fluid canvas is hidden (user is on a sub-page)
-    if (!this.canvas || this.canvas.offsetParent === null) return
-    // Skip touches on interactive UI elements — let clicks / scrolls pass through
+    // Skip entirely if fluid canvas is not visible on screen
+    if (this.isCanvasHidden()) return
     const target = e.target as HTMLElement | null
-    if (target && (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a, button, .enter, .page-back, .arrow, #card, .content-projects, .content-about, .content-contact, .content-practice, .flip-container'))) {
-      return
-    }
+    // Skip touches on any element outside the intro page
+    if (target && !target.closest('.content-intro')) return
     e.preventDefault()
     const dpr = window.devicePixelRatio || 1
     const touches = e.targetTouches
@@ -944,8 +951,10 @@ export class FluidBackground {
   }
 
   private onTouchMove = (e: TouchEvent) => {
-    // Skip if fluid canvas is hidden (user is on a sub-page)
-    if (!this.canvas || this.canvas.offsetParent === null) return
+    // Skip entirely if fluid canvas is not visible on screen
+    if (this.isCanvasHidden()) return
+    const target = e.target as HTMLElement | null
+    if (target && !target.closest('.content-intro')) return
     e.preventDefault()
     const dpr = window.devicePixelRatio || 1
     const touches = e.targetTouches
