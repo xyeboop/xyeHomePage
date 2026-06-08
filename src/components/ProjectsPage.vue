@@ -38,12 +38,24 @@ const backBtn = ref<HTMLElement>()
 const cardRefs = ref<HTMLElement[]>([])
 const flippedCards = ref<Set<number>>(new Set())
 
+const isPhone = /Mobile|Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent)
+
+function toggleCard(globalIdx: number) {
+  if (flippedCards.value.has(globalIdx)) {
+    flippedCards.value.delete(globalIdx)
+  } else {
+    flippedCards.value.add(globalIdx)
+  }
+  flippedCards.value = new Set(flippedCards.value)
+}
+
 function flipCard(globalIdx: number) {
   flippedCards.value.add(globalIdx)
   flippedCards.value = new Set(flippedCards.value)
 }
 
 function unflipCard(globalIdx: number) {
+  if (isPhone) return
   flippedCards.value.delete(globalIdx)
   flippedCards.value = new Set(flippedCards.value)
 }
@@ -105,7 +117,8 @@ onMounted(async () => {
               )"
               class="flip-container"
               :class="{ flipped: flippedCards.has((sections.indexOf(section) * section.items.length) + idx) }"
-              @click="flipCard((sections.indexOf(section) * section.items.length) + idx)"
+              @click="toggleCard((sections.indexOf(section) * section.items.length) + idx)"
+              @mouseenter="flipCard((sections.indexOf(section) * section.items.length) + idx)"
               @mouseleave="unflipCard((sections.indexOf(section) * section.items.length) + idx)"
             >
               <div class="flip-inner">

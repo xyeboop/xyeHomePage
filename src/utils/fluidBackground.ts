@@ -922,9 +922,11 @@ export class FluidBackground {
   private onMouseUp = () => { this.pointers[0].down = false }
 
   private onTouchStart = (e: TouchEvent) => {
-    // Only handle touches directly on the fluid canvas; let UI clicks pass through
+    // Skip if fluid canvas is hidden (user is on a sub-page)
+    if (!this.canvas || this.canvas.offsetParent === null) return
+    // Skip touches on interactive UI elements — let clicks / scrolls pass through
     const target = e.target as HTMLElement | null
-    if (target && (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a, button, .enter, .page-back, .arrow, #card'))) {
+    if (target && (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a, button, .enter, .page-back, .arrow, #card, .content-projects, .content-about, .content-contact, .content-practice, .flip-container'))) {
       return
     }
     e.preventDefault()
@@ -942,6 +944,8 @@ export class FluidBackground {
   }
 
   private onTouchMove = (e: TouchEvent) => {
+    // Skip if fluid canvas is hidden (user is on a sub-page)
+    if (!this.canvas || this.canvas.offsetParent === null) return
     e.preventDefault()
     const dpr = window.devicePixelRatio || 1
     const touches = e.targetTouches
