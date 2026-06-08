@@ -93,6 +93,7 @@ onUnmounted(() => {
 /* ====== 卡片 ====== */
 #card {
   position: relative;
+  z-index: 2;
   width: 100vw;
   height: 100vh;
   color: #93979e;
