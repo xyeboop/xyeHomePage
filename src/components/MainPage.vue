@@ -158,8 +158,7 @@ onUnmounted(() => {
   position: relative;
   display: inline-block;
   transition: all 0.2s;
-  width: 100%;
-  height: 100%;
+  flex: 1;
 }
 
 .card-inner ul li a {
