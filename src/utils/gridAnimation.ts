@@ -128,6 +128,8 @@ export class GridAnimation {
     let lastTouchTime = 0
 
     this.handleTouchStart = (e: TouchEvent) => {
+      // Only intercept touches directly on the canvas, not on UI elements above
+      if (e.target !== this.canvas) return
       e.preventDefault()
       const now = Date.now()
       if (now - lastTouchTime < 16) return

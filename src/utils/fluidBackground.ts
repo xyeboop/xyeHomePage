@@ -922,6 +922,11 @@ export class FluidBackground {
   private onMouseUp = () => { this.pointers[0].down = false }
 
   private onTouchStart = (e: TouchEvent) => {
+    // Only handle touches directly on the fluid canvas; let UI clicks pass through
+    const target = e.target as HTMLElement | null
+    if (target && (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a, button, .enter, .page-back, .arrow, #card'))) {
+      return
+    }
     e.preventDefault()
     const dpr = window.devicePixelRatio || 1
     const touches = e.targetTouches

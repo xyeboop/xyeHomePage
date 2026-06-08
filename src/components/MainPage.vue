@@ -50,25 +50,25 @@ onUnmounted(() => {
 
         <ul>
           <li>
-            <a :href="mainData.ul.first.href" @click.prevent="$emit('navigate', 'about')">
+            <a :href="mainData.ul.first.href" @click.prevent="$emit('navigate', 'about')" @touchend.prevent="$emit('navigate', 'about')">
               <i :class="'icon icon-' + mainData.ul.first.icon"></i>
               <span>{{ mainData.ul.first.text }}</span>
             </a>
           </li>
           <li>
-            <a :href="mainData.ul.second.href" @click.prevent="$emit('navigate', 'projects')">
+            <a :href="mainData.ul.second.href" @click.prevent="$emit('navigate', 'projects')" @touchend.prevent="$emit('navigate', 'projects')">
               <i :class="'icon icon-' + mainData.ul.second.icon"></i>
               <span>{{ mainData.ul.second.text }}</span>
             </a>
           </li>
           <li>
-            <a :href="mainData.ul.third.href" @click.prevent="$emit('navigate', 'practice')">
+            <a :href="mainData.ul.third.href" @click.prevent="$emit('navigate', 'practice')" @touchend.prevent="$emit('navigate', 'practice')">
               <i :class="'icon icon-' + mainData.ul.third.icon"></i>
               <span>{{ mainData.ul.third.text }}</span>
             </a>
           </li>
           <li>
-            <a :href="mainData.ul.fourth.href" @click.prevent="$emit('navigate', 'contact')">
+            <a :href="mainData.ul.fourth.href" @click.prevent="$emit('navigate', 'contact')" @touchend.prevent="$emit('navigate', 'contact')">
               <i :class="'icon icon-' + mainData.ul.fourth.icon"></i>
               <span>{{ mainData.ul.fourth.text }}</span>
             </a>
