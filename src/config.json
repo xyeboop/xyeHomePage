@@ -17,7 +17,7 @@
 		"name": "YuTing Ye",
 		"signature": "Product × AI × Experience",
 		"avatar": {
-			"link": "/avatar.jpg",
+			"link": "./avatar.jpg",
 			"height": "100",
 			"width": "100"
 		},
@@ -55,13 +55,13 @@
 		"aiPrompt": "你在AI实践方面有哪些经验？",
 		"aiTitle": "COPLAY玩名堂 — AI桌游社交产品设计",
 		"aiDesc": "这是一款融合AI技术的桌游社交产品。通过AI生成动态游戏剧情、智能裁判辅助、以及个性化玩家体验，让传统桌游焕发新的生命力。以下是用AI工具制作的产品概念动画：",
-		"videoPlaceholder": "/coplay-demo.mp4",
-		"videoPoster": "/coplay-poster.jpg",
+		"videoPlaceholder": "./coplay-demo.mp4",
+		"videoPoster": "./coplay-poster.jpg",
 		"back": "← Back"
 	},
 	"about": {
 		"back": "← Back",
-		"photoImage": "/cuteme.gif",
+		"photoImage": "./cuteme.gif",
 		"photoAlt": "My pixel character",
 		"terminal": {
 			"title": "about — YuTing Ye",
@@ -107,7 +107,7 @@
 							{ "value": "-20%", "label": "审核量级" },
 							{ "value": "+16%", "label": "审核效率" }
 						],
-						"logo": "/shein.png",
+						"logo": "./shein.png",
 						"logoWidth": 64,
 						"logoHeight": 20,
 						"logoTop": 12,
@@ -122,7 +122,7 @@
 							{ "value": "+26.4w", "label": "日均新用户" },
 							{ "value": "2.05", "label": "拉新ROI" }
 						],
-						"logo": "/jd.png",
+						"logo": "./jd.png",
 						"logoWidth": 27,
 						"logoHeight": 27,
 						"logoTop": 12,
@@ -137,7 +137,7 @@
 							{ "value": "+8.19%", "label": "平均费率" },
 							{ "value": "+16.31%", "label": "广告收入" }
 						],
-						"logo": "/ctrip.png",
+						"logo": "./ctrip.png",
 						"logoWidth": 50,
 						"logoHeight": 50,
 						"logoTop": 0,
